@@ -30,12 +30,7 @@ class chessboard{
     };
 
     value(pos){
-        let value = this.board[pos[0]][pos[1]]
-        if(value % 2 == 0){
-            return([value, "black"]);
-        }else{
-            return([value, "white"]);
-        }
+        return(this.board[pos[0]][pos[1]]);
     };
 
     highlightPos(positions){
@@ -59,475 +54,128 @@ visualise();
 
 // standard movesets (forward = F; backward = B; right = R; left = L; combinations: FR, FL, BR, BL; + misc) - int(if infinite then input number equal to board length)
 
-function F(pos, distance, color, jump, exception){
-    let validMoves = [];
-    let ypos = pos[1];
-    let xpos = pos[0];
-
-    if(color == "white"){
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(ypos + (i + 1) <= board_height - 1){
-                    validMoves.push([xpos, ypos + (i + 1)]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(ypos + (i + 1) <= board_height - 1){
-                    let move = [xpos, ypos + (i + 1)];
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "white"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "black"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
-        };
+function findColor(num){
+    if(num%2 == 1){
+        return(0);
     }else{
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(ypos - (i + 1) >= 0){
-                    validMoves.push([xpos, ypos - (i + 1)]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(ypos - (i + 1) >= 0){
-                    let move = [xpos, ypos - (i + 1)]
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "black"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "white"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
-        };
+        return(1);
     };
-
-    return(validMoves);
 };
 
-function B(pos, distance, color, jump, exception){
+function executeMove(pos, distance, dx, dy, color, jump){
     let validMoves = [];
-    let ypos = pos[1];
-    let xpos = pos[0];
-    
-    if(color == "white"){
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(ypos - (i + 1) >= 0){
-                    validMoves.push([xpos, ypos - (i + 1)]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(ypos - (i + 1) >= 0){
-                    let move = [xpos, ypos - (i + 1)];
+    let runningPos = [pos[0], pos[1]];
 
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "white"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "black"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
+    if(color == 1){
+        dx = dx * -1;
+        dy = dy * -1;
     };
-    }else{
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(ypos + (i + 1) <= board_height - 1){
-                    validMoves.push([xpos, ypos + (i + 1)]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(ypos + (i + 1) <= board_height - 1){
-                    let move = [xpos, ypos + (i + 1)];
 
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "black"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "white"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
+    for(let i = 0; i < distance; i++){
+        runningPos[0] += dx;
+        runningPos[1] += dy;
+        
+        for(let j = 0; j < 2; j++){
+            if(runningPos[j] <= 0 || runningPos[j] >= (j == 0 ? board_width - 1 : board_height - 1)){
+                continue;
+            };  
+        };
+
+        let boardValue = board.value(runningPos);
+
+        if(boardValue == 0){
+            validMoves.push([...runningPos]);
+        }else{
+            if(jump){
+                if(findColor(boardValue) != color){
+                    validMoves.push([...runningPos]);
+                }
+            }else{
+                if(findColor(boardValue) == color){
+                    return(validMoves);
+                }else{
+                    validMoves.push([...runningPos]);
+                    return(validMoves);
+                }
             };
         };
     };
-
-    return(validMoves);
+    return (validMoves);
 };
 
-function R(pos, distance, color, jump, exception){
-    let validMoves = [];
-    let xpos = pos[0];
-    let ypos = pos[1];
 
-    if(color == "white"){
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(xpos - (i + 1) >= 0){
-                    validMoves.push([xpos - (i + 1), ypos]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(xpos - (i + 1) >= 0){
-                    let move = [xpos - (i + 1), ypos];
-
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "white"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "black"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    }else{
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(xpos + (i + 1) <= board_width - 1){
-                    validMoves.push([xpos + (i + 1), ypos]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(xpos + (i + 1) <= board_width - 1){
-                    let move = [xpos + (i + 1), ypos];
-
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "black"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "white"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-
-    return(validMoves);
+//Forward, Backward, Right, Left
+function F(pos, distance, color, jump){
+    return executeMove(pos, distance, 0, 1, color, jump);
 };
 
-function L(pos, distance, color, jump, exception){
-    let validMoves = [];
-    let xpos = pos[0];
-    let ypos = pos[1];
+function B(pos, distance, color, jump){
+    return executeMove(pos, distance, 0, -1, color, jump);
+};
 
-    if(color == "white"){
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(xpos + (i + 1) <= board_width - 1){
-                    validMoves.push([xpos + (i + 1), ypos]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(xpos + (i + 1) <= board_width - 1){
-                    let move = [xpos + (i + 1), ypos];
+function R(pos, distance, color, jump){
+    return executeMove(pos, distance, -1, 0, color, jump);
+};
 
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "white"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "black"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    }else{
-        if(exception){
-            for(let i = 0; i < distance; i++){
-                if(xpos - (i + 1) >= 0){
-                    validMoves.push([xpos - (i + 1), ypos]);
-                };
-            };
-        }else{
-            for(let i = 0; i < distance; i++){
-                if(xpos - (i + 1) >= 0){
-                    let move = [xpos - (i + 1), ypos];
+function L(pos, distance, color, jump){
+    return executeMove(pos, distance, 1, 0, color, jump);
+};
+//---
+// diagonal
+function RF(pos, distance, color, jump){
+    return executeMove(pos, distance, -1, 1, color, jump);
+};
+function RB(pos, distance, color, jump){
+    return executeMove(pos, distance, -1, -1, color, jump);
+};
+function LF(pos, distance, color, jump){
+    return executeMove(pos, distance, 1, 1, color, jump);
+};
 
-                    if(board.value(move)[0] == 0){
-                        validMoves.push(move);
-                    }else{
-                        if(jump == false){
-                            if(board.value(move)[1] == "black"){
-                                return (validMoves);
-                            }else{
-                                validMoves.push(move);
-                                return (validMoves);
-                            };
-                        }else{
-                            if(board.value(move)[1] == "white"){
-                                validMoves.push(move);
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-
-    return(validMoves);
+function LB(pos, distance, color, jump){
+    return executeMove(pos, distance, 1, -1, color, jump);
 };
 
 function D(pos, distance, color, jump){
     let validMoves = [];
 
+    const directions = [RF, RB, LF, LB];
 
-    function RF(actualDistance){
-        let rPos = R(pos, actualDistance, color, true, "all");
-        let fPos = F(pos, actualDistance, color, true, "all");
-        let rLength = rPos.length;
-
-        for(let j = 0; j < ((rLength < fPos.length) ? rLength : fPos.length); j++){
-            
-            let move = [rPos[j][0],fPos[j][1]];
-
-            if(board.value(move)[0] == 0){
-                validMoves.push(move);
-            }else{
-                if(jump == false){
-                    if(board.value(move)[1] == (color == "white" ? "white" : "black")){
-                        return (validMoves);
-                    }else{
-                        validMoves.push(move);
-                        return (validMoves);
-                    };
-                }else{
-                    if(board.value(move)[1] == (color == "white" ? "black" : "white")){
-                        validMoves.push(move);
-                    };
-                };
-            };
+    if(typeof distance == "number"){
+        for(let i = 0; i < 4; i++){
+            validMoves.push(directions[i](pos, distance, color, jump));
         };
-    }
-
-    function RB(actualDistance){
-        let rPos = R(pos, actualDistance, color, true, "all");
-        let bPos = B(pos, actualDistance, color, true, "all");  
-        let rLength = rPos.length;
-
-        for(let j = 0; j < ((rLength < bPos.length) ? rLength : bPos.length); j++){
-
-            let move = [rPos[j][0],bPos[j][1]];
-
-            if(board.value(move)[0] == 0){
-                validMoves.push(move);
-            }else{
-                if(jump == false){
-                    if(board.value(move)[1] == (color == "white" ? "white" : "black")){
-                        return (validMoves);
-                    }else{
-                        validMoves.push(move);
-                        return (validMoves);
-                    };
-                }else{
-                    if(board.value(move)[1] == (color == "white" ? "black" : "white")){
-                        validMoves.push(move);
-                    };
-                };
-            };
-        };
-    }
-
-    function LF(actualDistance){
-        let lPos = L(pos, actualDistance, color, true, "all");
-        let fPos = F(pos, actualDistance, color, true, "all");
-        let lLength = lPos.length;
-
-
-        for(let j = 0; j < ((lLength < fPos.length) ? lLength : fPos.length); j++){
-
-            let move = [lPos[j][0],fPos[j][1]];
-
-            if(board.value(move)[0] == 0){
-                validMoves.push(move);
-            }else{
-                if(jump == false){
-                    if(board.value(move)[1] == (color == "white" ? "white" : "black")){
-                        return (validMoves);
-                    }else{
-                        validMoves.push(move);
-                        return (validMoves);
-                    };
-                }else{
-                    if(board.value(move)[1] == (color == "white" ? "black" : "white")){
-                        validMoves.push(move);
-                    };
-                };
-            };
-        };
-    }
-
-    function LB(actualDistance){
-        let lPos = L(pos, actualDistance, color, true, "all");
-        let bPos = B(pos, actualDistance, color, true, "all");  
-        let lLength = lPos.length;
-
-        for(let j = 0; j < ((lLength < bPos.length) ? lLength : bPos.length); j++){
-
-            let move = [lPos[j][0],bPos[j][1]];
-
-            if(board.value(move)[0] == 0){
-                validMoves.push(move);
-            }else{
-                if(jump == false){
-                    if(board.value(move)[1] == "black"){
-                        return (validMoves);
-                    }else{
-                        validMoves.push(move);
-                        return (validMoves);
-                    };
-                }else{
-                    if(board.value(move)[1] == "white"){
-                        validMoves.push(move);
-                    };
-                };
-            };
-        };
-    }
-    
-    if(distance.length == 1){
-    // every direction (RF, RB, LF, LB)
-        RF(distance[0]);
-        RB(distance[0]);
-        LF(distance[0]);
-        LB(distance[0]);
-
     }else{
-    //one by one
-        if(distance.includes("RF")){
-            RF(distance[distance.indexOf("RF") + 1]);
+        for(let i = 0; i < distance.length; i++){
+            let set = distance[i]
+            validMoves.push(set[0](set[1], set[2], color, jump));
         };
-        if(distance.includes("RB")){
-            RB((distance[distance.indexOf("RB") + 1]));
-        };
-        if(distance.includes("LF")){
-            LF((distance[distance.indexOf("LF") + 1]));
-        }
-        if(distance.includes("LB")){
-            LB((distance[distance.indexOf("LB") + 1]));
-        } 
     };
-    
-    return(validMoves);
+
+    return(validMoves.flat());
 };
 
-// miscellanious movesets/attacks
-
 // move
-function M(pos, move, color){
-
+function M(pos, newPositions, color){
     let validMoves = [];
-    let xPos = pos[0];
-    let yPos = pos[1];
-
-    if(color == "white"){
-        for(let i = 0; i < move.length; i++){
-            if(xPos - move[0] >= 0 && yPos + move[1] < board_height){
-                if(board.value([xPos - move[0], yPos + move[1]])[1] == "black" || board.value([xPos - move[0], yPos + move[1]])[0] == 0){
-                    validMoves.push([xPos - move[0], yPos + move[1]]);
-                };
-            };
-        };
-    }else{
-        for(let i = 0; i < move.length; i++){
-            if(xPos + move[0] < board_width && yPos - move[1] >= 0){
-                if(board.value([xPos + move[0], yPos - move[1]])[1] == "white" || board.value([xPos + move[0], yPos - move[1]])[0] == 0){
-                    validMoves.push([xPos + move[0], yPos - move[1]]);
-                };
-            };
-        };
+    for(let i = 0; i < newPositions.length; i++){
+        let newPos = newPositions[i];
+        validMoves.push(executeMove(pos, 1, newPos[0], newPos[1], color, false));
     };
-    return(validMoves);
-};               
+
+    return(validMoves.flat());
+};
 
 // a way to create pieces + corresponding functions
 
 class piece{
-    constructor(name, color, jump, standard_moveset, misc_moveset, other, attack, state, value, id){
+    constructor(name, color, jump, standard_moveset, attacks, other, state, value, id){
         this.name = name;
         this.color = color;
         this.jump = jump;
         this.standard = standard_moveset;
-        this.misc = misc_moveset;
+        this.attacks = attacks;
         this.other = other;
-        this.attack = attack;
         this.state = state;
         this.value = value;
         this.id = id;
@@ -545,45 +193,36 @@ class piece{
 
     get possibleMoves(){
         let moves = [];
+
         for(let i = 0; i < this.standard.length; i++){
             moves.push(this.standard[i][0](this.pos, this.standard[i][1], this.color, this.jump));
+            
         };
-        for(let j = 0; j < this.misc.length; j++){
-            moves.push(this.misc[j][0](this.pos, this.misc[j][1], this.color, this.jump));
-        };
-
 
         return(moves.flat());
     };
 
     get possibleAttacks(){
-        let attacks = [];
-        if(this.attack.length == 0){
+        let attackMoves = [];
+
+        if(this.attacks.length == 0){
             return (this.possibleMoves);
         }else{
-            if(this.attack[0] == true){
-                attacks.push(this.possibleMoves);
+            if(this.attacks[0] == true){
+                attackMoves.push(this.possibleMoves);
             };
 
-            for(let i = 0; i < this.attack.length - 1; i++){
-                attacks.push(this.attack[i + 1][0](this.pos, this.attack[i + 1][1], this.color, this.attack[i + 1][2]));
+            for(let i = 0; i < this.attacks.length - 1; i++){
+                attackMoves.push(this.attacks[i + 1][0](this.pos, this.attacks[i + 1][1], this.color, this.attacks[i + 1][2]));
             }
         };
 
-        return(attacks.flat());
+        return(attackMoves.flat());
     };
 };
+// name, color (0 = white, 1 = black), jump, move, attack, other, state, value, id
+let a = new piece("a", 0, true, [[B, 3], [F, 4], [R, 3], [L, 3], [D, 2], [M, [[1, 2], [-3, 1]]]], [], [], null, 1, 1);
 
-//standard moves: (F, B, R, L) , integer - diagonal (D), [(specific direction), int for that direction, ...]
-//misc: (M) - give the coordinate the piece should be offset by (the forward direction is positive Y direction) [M, [[int, int], [int, int], ...]]
-//jump: true if a piece doesn't get stopped by other pieces, false if it does
-//id: all white pieces have odd numbered id-s while all blacks have even numbered
-//attacks: leave empty if attacks = movesets, else attacks[0] = true/false for whether it should include existing movesets -> [moveset, move, jump]
-
-//let name = new piece(name, color, jump, standard moveset, misc moveset, other, attacks, state, value, id); - 10 params
-
-//let rook = new piece("rook", "white", false, [[F, board_height], [B, board_height], [R, board_width], [L, board_width], [D, [board_width]]], [], [], null, 1, 1);
-let a = new piece("a", "black", true, [[F, 3], [B, 3], [R, 3], [L, 3], [D, [3]]], [], [], [false, [F, 3, true], [D, [3], false]], null, 1, 1);
 //visualise table
 function visualise(){
     const table = document.getElementById("table");
@@ -604,4 +243,5 @@ function visualise(){
 };
 //TODO: misc for leaving out spaces
 //TODO: implement en passant, castling, and other weird shit
-//TODO: rewrite entirely to fix this slop
+
+// current best abt 15ms
