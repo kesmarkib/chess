@@ -244,4 +244,4 @@ function visualise(){
 //TODO: misc for leaving out spaces
 //TODO: implement en passant, castling, and other weird shit
 
-// current best abt 15ms
+// current best avg 15ms
