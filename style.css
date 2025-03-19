@@ -8,13 +8,26 @@ html, body{
 #page{
     margin: 0;
     display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+#table{
+    margin-left: 100px;
+    height: 80vh;
+    width: auto;
+    display: grid;
+}
+
+.position{
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#table{
-    height: auto;
-    width: auto;
-    font-family: monospace;
-    font-size: 10pt;
+.position *{
+    width: 80%;
+    height: 80%;
 }

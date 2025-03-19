@@ -50,8 +50,6 @@ class chessboard{
 
 let board = new chessboard(board_width, board_height);
 
-visualise();
-
 // standard movesets (forward = F; backward = B; right = R; left = L; combinations: FR, FL, BR, BL; + misc) - int(if infinite then input number equal to board length)
 
 function findColor(num){
@@ -223,25 +221,53 @@ class piece{
 // name, color (0 = white, 1 = black), jump, move, attack, other, state, value, id
 let a = new piece("a", 0, true, [[B, 3], [F, 4], [R, 3], [L, 3], [D, 2], [M, [[1, 2], [-3, 1]]]], [], [], null, 1, 1);
 
-//visualise table
-function visualise(){
-    const table = document.getElementById("table");
-    table.innerText = "";
-    table.innerText += " -";
-    for(let z = 0; z < board_width; z++){
-        table.innerText += `  ${horizontal[z]}`
-    }
-    table.innerText += "\n ";
+//visualize table
+function visualize(){
+    let table = document.getElementById("table");
+    let columns = "";
+    let rows = "";
 
-    for(let y = 0; y < board_height; y++){
-        table.innerText += y+1;
-        for(let x = 0; x < board_width; x++){
-            table.innerText += ` ${board.board[x][y]}`;
-        };
-        table.innerText += "\n";
+    let h = table.getBoundingClientRect().height
+
+    let side = h/board_height
+
+    for(let w = 0; w < board_width; w++) {
+        columns += ` ${side}px`;
     };
+
+    for(let h = 0; h < board_width; h++) {
+        rows += ` ${side}px`;
+    };
+
+    table.style.gridTemplateColumns = columns;
+    table.style.gridTemplateRows = rows;
+    
+    let previousColor;
+
+    for(let i = 0; i < board_width; i++){
+        previousColor = (i+1)%2 
+        for(let j = 0; j < board_height; j++){
+            let gridItem = document.createElement("div");
+            gridItem.style.width = `${side}px`;
+            gridItem.style.height = `${side}px`;
+            gridItem.style.gridColumn = j+1;
+            gridItem.style.gridAutoRows = i+1;
+            gridItem.classList.add("position")
+            
+            if(previousColor == 1){
+                gridItem.style.backgroundColor = "black";
+                previousColor = 0;
+            }else{
+                gridItem.style.backgroundColor = "white";
+                previousColor = 1;
+            };
+
+            table.appendChild(gridItem);
+        };
+    };
+
 };
 //TODO: misc for leaving out spaces
 //TODO: implement en passant, castling, and other weird shit
-
+//TODO: implement board width-height change support
 // current best abt 15ms
