@@ -20,13 +20,14 @@ class chessboard{
         };
 
         this.board[3][4] = 1
-        this.board[2][4] = 3;
+        this.board[7][3] = 3;
+        /*
         this.board[3][3] = 5;
         this.board[4][4] = 7;
         this.board[3][5] = 9;
         this.board[1][2] = 3;
         this.board[4][5] = 5
-
+ */
     };
 
     value(pos){
@@ -166,19 +167,45 @@ function M(pos, newPositions, color){
     return(validMoves.flat());
 };
 
+function vision(color, pos){
+    let allPositions = [];
+    pieces.forEach(p => {
+        if(p.color == color){
+            allPositions.push(p.possibleAttacks);
+        };
+    });
+
+    allPositions = allPositions.flat();
+
+    if(pos){
+        if(allPositions.findIndex(arr => JSON.stringify(arr) === JSON.stringify(pos)) > -1){
+            return(true);
+        }else{
+            return(false);
+        }
+    }else{
+        return(allPositions);
+    };
+};
 // a way to create pieces + corresponding functions
 
+let pieces = [];
+
 class piece{
-    constructor(name, color, jump, standard_moveset, attacks, other, state, value, id){
+    constructor(name, color, jump, standard_moveset, attacks, ignore, other, state, value, id){
         this.name = name;
         this.color = color;
         this.jump = jump;
         this.standard = standard_moveset;
         this.attacks = attacks;
+        this.ignore = ignore;
         this.other = other;
         this.state = state;
         this.value = value;
         this.id = id;
+        this.position = this.pos;
+
+        pieces.push(this);
     };
 
     get pos(){
@@ -195,16 +222,26 @@ class piece{
         let moves = [];
 
         for(let i = 0; i < this.standard.length; i++){
-            moves.push(this.standard[i][0](this.pos, this.standard[i][1], this.color, this.jump));
+            moves.push(this.standard[i][0](this.position, this.standard[i][1], this.color, this.jump));
             
         };
 
-        return(moves.flat());
+        moves = moves.flat();
+        
+        for(let i = 0; i < this.ignore[0].length; i++){
+            let p = this.ignore[0][i];
+            let ignorePos = M(this.position, [p], this.color)[0];
+            let index = moves.findIndex(arr => JSON.stringify(arr) === JSON.stringify(ignorePos));
+            if(index > -1){
+                moves.splice(index, 1);
+            };
+        };
+
+        return(moves);
     };
 
     get possibleAttacks(){
         let attackMoves = [];
-
         if(this.attacks.length == 0){
             return (this.possibleMoves);
         }else{
@@ -213,35 +250,72 @@ class piece{
             };
 
             for(let i = 0; i < this.attacks.length - 1; i++){
-                attackMoves.push(this.attacks[i + 1][0](this.pos, this.attacks[i + 1][1], this.color, this.attacks[i + 1][2]));
+                attackMoves.push(this.attacks[i + 1][0](this.position, this.attacks[i + 1][1], this.color, this.attacks[i + 1][2]));
             }
         };
 
-        return(attackMoves.flat());
+        attackMoves = attackMoves.flat();
+        
+        for(let i = 0; i < this.ignore[1].length; i++){
+            let p = this.ignore[1][i];
+            let ignorePos = M(this.position, [p], this.color)[0];
+            let index = moves.findIndex(arr => JSON.stringify(arr) === JSON.stringify(ignorePos));
+            if(index > -1){
+                attackMoves.splice(index, 1);
+            };
+        };
+
+        return(attackMoves);
     };
 };
-// name, color (0 = white, 1 = black), jump, move, attack, other, state, value, id
-let a = new piece("a", 0, true, [[B, 3], [F, 4], [R, 3], [L, 3], [D, 2], [M, [[1, 2], [-3, 1]]]], [], [], null, 1, 1);
+// name, color (0 = white, 1 = black), jump, move, attack, ignore (i0 = moves, i1 = attacks),  other, state, value, id
+let a = new piece(
+    "a", //name
+    0, //color
+    true, //jump
+    [[B, 3], [F, 4], [R, 3], [L, 3], [D, 2], [M, [[1, 2], [-3, 1]]]], //moveset
+    [false, [F, 2]], //attacks [0] = true/false -> [attack]
+    [[[1, 1]],[]], //ignore
+    [], //other
+    null, //state
+    1, //value
+    1 //id
+);
+let b = new piece(
+    "b",
+    0,
+    true,
+    [],
+    [false, [R, 4]],
+    [[],[]],
+    [],
+    null,
+    1,
+    3,
+    3
+);
 
 //visualise table
 function visualise(){
     const table = document.getElementById("table");
     table.innerText = "";
-    table.innerText += " -";
+    table.innerText += "..";
     for(let z = 0; z < board_width; z++){
-        table.innerText += `  ${horizontal[z]}`
+        table.innerText += `_${horizontal[z]}`
     }
     table.innerText += "\n ";
 
     for(let y = 0; y < board_height; y++){
-        table.innerText += y+1;
+        table.innerText += `${y+1}|`;
         for(let x = 0; x < board_width; x++){
             table.innerText += ` ${board.board[x][y]}`;
         };
-        table.innerText += "\n";
+        table.innerText += "\n"; 
     };
 };
-//TODO: misc for leaving out spaces
-//TODO: implement en passant, castling, and other weird shit
 
+//TODO: make a function to check all enemy pieces that look onto a certain position // fix function (vision)
+//TODO: attack move vs just attack on a certain position
+
+//TODO: implement custom rules that can be added to pieces
 // current best avg 15ms

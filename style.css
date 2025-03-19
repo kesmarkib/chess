@@ -2,7 +2,7 @@ html, body{
     margin: 0;
     width: 100vw;
     height: 100vh;
-    background-color: grey;
+    background-color: black;
 }
 
 #page{
@@ -15,6 +15,8 @@ html, body{
 #table{
     height: auto;
     width: auto;
+    color: white;
     font-family: monospace;
     font-size: 10pt;
+    filter: opacity(0.7);
 }
