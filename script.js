@@ -5,22 +5,26 @@ const horizontal = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const board_width = 8;
 const board_height = 8;
 
+function strfy(array){
+    return JSON.stringify(array);
+}
+
 class chessboard{
-    constructor(widht, height){
-        this.widht = widht;
+    constructor(width, height){
+        this.width = width;
         this.height = height;
         this.board = [];
         this.board_no_highlight = [];
 
-        for(let w = 0; w < widht; w++){
+        for(let w = 0; w < width; w++){
             this.board.push([]);
             for(let h = 0; h < height; h++){
                 this.board[w].push(0);
             };
         };
 
-        this.board[3][4] = 1
-        this.board[7][3] = 3;
+        this.board[3][4] = 1;
+        this.board[7][5] = 2;
         /*
         this.board[3][3] = 5;
         this.board[4][4] = 7;
@@ -167,7 +171,7 @@ function M(pos, newPositions, color){
     return(validMoves.flat());
 };
 
-function vision(color, pos){
+function vision(color){
     let allPositions = [];
     pieces.forEach(p => {
         if(p.color == color){
@@ -177,16 +181,15 @@ function vision(color, pos){
 
     allPositions = allPositions.flat();
 
-    if(pos){
-        if(allPositions.findIndex(arr => JSON.stringify(arr) === JSON.stringify(pos)) > -1){
-            return(true);
-        }else{
-            return(false);
-        }
-    }else{
-        return(allPositions);
-    };
+    return(allPositions);
 };
+
+function visionOnPos(color, pos){    
+    let index = (color == 0 ? whiteVision : blackVision).findIndex(arr => strfy(arr) === strfy(pos));
+
+    return(index > -1 ? true : false);
+};
+
 // a way to create pieces + corresponding functions
 
 let pieces = [];
@@ -211,7 +214,7 @@ class piece{
     get pos(){
         for(let i = 0; i < board_width; i++){
             let index = board.board[i].indexOf(this.id);
-            if(index != -1){
+            if(index > -1){
                 return([i, index]);
             };
         };
@@ -231,7 +234,7 @@ class piece{
         for(let i = 0; i < this.ignore[0].length; i++){
             let p = this.ignore[0][i];
             let ignorePos = M(this.position, [p], this.color)[0];
-            let index = moves.findIndex(arr => JSON.stringify(arr) === JSON.stringify(ignorePos));
+            let index = moves.findIndex(arr => strfy(arr) === strfy(ignorePos));
             if(index > -1){
                 moves.splice(index, 1);
             };
@@ -259,7 +262,7 @@ class piece{
         for(let i = 0; i < this.ignore[1].length; i++){
             let p = this.ignore[1][i];
             let ignorePos = M(this.position, [p], this.color)[0];
-            let index = moves.findIndex(arr => JSON.stringify(arr) === JSON.stringify(ignorePos));
+            let index = moves.findIndex(arr => strfy(arr) === strfy(ignorePos));
             if(index > -1){
                 attackMoves.splice(index, 1);
             };
@@ -267,7 +270,21 @@ class piece{
 
         return(attackMoves);
     };
+
+    get customRules(){
+        for(let i = 0; i < this.other.length; i++){
+            if(this.other[i](this) == false){
+                return(false);
+            };
+        };
+        return(true)
+    };
 };
+
+//custom rule for piece a
+
+
+
 // name, color (0 = white, 1 = black), jump, move, attack, ignore (i0 = moves, i1 = attacks),  other, state, value, id
 let a = new piece(
     "a", //name
@@ -276,30 +293,33 @@ let a = new piece(
     [[B, 3], [F, 4], [R, 3], [L, 3], [D, 2], [M, [[1, 2], [-3, 1]]]], //moveset
     [false, [F, 2]], //attacks [0] = true/false -> [attack]
     [[[1, 1]],[]], //ignore
-    [], //other
+    [
+        function isWatched(obj){
+        return(visionOnPos(obj.color == 0 ? 1 : 0, obj.pos));
+        }
+    ], //other - functions that can check the board for different values and return true/false
     null, //state
     1, //value
     1 //id
 );
 let b = new piece(
     "b",
-    0,
+    1,
     true,
     [],
-    [false, [R, 4]],
+    [false, [L, 4]],
     [[],[]],
     [],
     null,
     1,
-    3,
-    3
+    2
 );
 
 //visualise table
 function visualise(){
     const table = document.getElementById("table");
     table.innerText = "";
-    table.innerText += "..";
+    table.innerText += "<>";
     for(let z = 0; z < board_width; z++){
         table.innerText += `_${horizontal[z]}`
     }
@@ -314,8 +334,13 @@ function visualise(){
     };
 };
 
-//TODO: make a function to check all enemy pieces that look onto a certain position // fix function (vision)
-//TODO: attack move vs just attack on a certain position
+let whiteVision = vision(0);
+let blackVision = vision(1);
 
 //TODO: implement custom rules that can be added to pieces
+
+
+
+//TODO: make all this in C so its fast as can be
+
 // current best avg 15ms
