@@ -44,18 +44,18 @@ class chessboard{
         for(let i = 0; i < positions.length; i++){
             this.board[positions[i][0]][positions[i][1]] = "■";
         };
-        visualise();
+        visualize();
     };
 
     get clear(){
         this.board = JSON.parse(JSON.stringify(this.board_no_highlight));
-        visualise();
+        visualize();
     };
 };
 
 let board = new chessboard(board_width, board_height);
 
-visualise();
+visualize();
 
 // standard movesets (forward = F; backward = B; right = R; left = L; combinations: FR, FL, BR, BL; + misc) - int(if infinite then input number equal to board length)
 
@@ -315,8 +315,8 @@ let b = new piece(
     2
 );
 
-//visualise table
-function visualise(){
+//visualize table
+function visualize(){
     const table = document.getElementById("table");
     table.innerText = "";
     table.innerText += "<>";
@@ -336,11 +336,3 @@ function visualise(){
 
 let whiteVision = vision(0);
 let blackVision = vision(1);
-
-//TODO: implement custom rules that can be added to pieces
-
-
-
-//TODO: make all this in C so its fast as can be
-
-// current best avg 15ms
