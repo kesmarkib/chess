@@ -6,6 +6,7 @@ import { piece, pieces } from "./pieces.js";
 import { board } from "./board.js";
 
 visualize();
+
 globalThis.util = util;
 globalThis.move = move;
 globalThis.constant = constant;

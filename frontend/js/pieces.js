@@ -3,6 +3,8 @@ import * as util from "./utils.js";
 import { board } from "./board.js";
 import * as constant from "./constants.js";
 
+let pieces = [];
+
 export class piece{
     constructor(name, color, jump, standard_moveset, attacks, ignore, other, state, value, id){
         this.name = name;
@@ -16,6 +18,8 @@ export class piece{
         this.value = value;
         this.id = id;
         this.position = this.pos;
+
+        pieces.push(this);
     };
 
     get pos(){
@@ -33,7 +37,6 @@ export class piece{
 
         for(let i = 0; i < this.standard.length; i++){
             moves.push(this.standard[i][0](this.position, this.standard[i][1], this.color, this.jump));
-            
         };
 
         moves = moves.flat();
@@ -89,8 +92,17 @@ export class piece{
 };
 
 
-export let pieces = [
-    new piece(
+export { pieces };
+
+/*
+ ______   __     ______     ______     ______     ______    
+/\  == \ /\ \   /\  ___\   /\  ___\   /\  ___\   /\  ___\   
+\ \  _-/ \ \ \  \ \  __\   \ \ \____  \ \  __\   \ \___  \  
+ \ \_\    \ \_\  \ \_____\  \ \_____\  \ \_____\  \/\_____\ 
+  \/_/     \/_/   \/_____/   \/_____/   \/_____/   \/_____/ 
+*/                                                            
+
+new piece(
         "a", //name
         0, //color
         true, //jump
@@ -105,8 +117,9 @@ export let pieces = [
         null, //state
         1, //value
         1 //id
-    ),
-    new piece(
+);
+
+new piece(
         "b",
         1,
         true,
@@ -117,5 +130,4 @@ export let pieces = [
         null,
         1,
         2
-    )
-]
+);

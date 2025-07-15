@@ -71,7 +71,7 @@ export function R(pos, distance, color, jump){
 export function L(pos, distance, color, jump){
     return executeMove(pos, distance, 1, 0, color, jump);
 };
-//---
+
 // diagonal
 export function RF(pos, distance, color, jump){
     return executeMove(pos, distance, -1, 1, color, jump);
@@ -82,7 +82,6 @@ export function RB(pos, distance, color, jump){
 export function LF(pos, distance, color, jump){
     return executeMove(pos, distance, 1, 1, color, jump);
 };
-
 export function LB(pos, distance, color, jump){
     return executeMove(pos, distance, 1, -1, color, jump);
 };
@@ -106,7 +105,6 @@ export function D(pos, distance, color, jump){
     return(validMoves.flat());
 };
 
-// move
 export function M(pos, newPositions, color){
     let validMoves = [];
     for(let i = 0; i < newPositions.length; i++){

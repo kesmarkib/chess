@@ -24,7 +24,7 @@ class chessboard{
         this.board[3][5] = 9;
         this.board[1][2] = 3;
         this.board[4][5] = 5
- */
+        */
     };
 
     value(pos){
@@ -48,4 +48,4 @@ class chessboard{
 
 let board = new chessboard(constant.board_width, constant.board_height);
 
-export {board}
+export { board };
