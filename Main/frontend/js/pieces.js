@@ -6,20 +6,13 @@ import * as constant from "./constants.js";
 let pieces = [];
 
 export class piece{
-    constructor(name, color, jump, standard_moveset, attacks, ignore, other, state, value, id){
-        this.name = name;
-        this.color = color;
-        this.jump = jump;
-        this.standard = standard_moveset;
-        this.attacks = attacks;
-        this.ignore = ignore;
-        this.other = other;
-        this.state = state;
-        this.value = value;
+    constructor(type, id, color, state){
         this.id = id;
-        this.position = this.pos;
-
-        pieces.push(this);
+        this.type = type;
+        this.color = color;
+        this.state = state;
+        
+        this.position = null;
     };
 
     get pos(){
