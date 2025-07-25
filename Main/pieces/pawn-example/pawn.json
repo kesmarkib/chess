@@ -1,0 +1,41 @@
+{
+    "id": "0",
+    "value": 1,
+    "can_jump": false,
+    "move_on_attack": true,
+    "standard_moveset": {
+        "forward": 2,
+        "back": 0,
+        "right": 0,
+        "left": 0,
+        "diagonals": {
+            "top_right": 0,
+            "top_left": 0,
+            "bottom_right": 0,
+            "bottom_left": 0
+        },
+        "special_moves": {},
+        "ignore_spaces": {}
+    },
+    "attack_moveset": {
+        "forward": 0,
+        "back": 0,
+        "right": 0,
+        "left": 0,
+        "diagonals": {
+            "top_right": 1,
+            "top_left": 1,
+            "bottom_right": 0,
+            "bottom_left": 0
+        },
+        "special_moves": {},
+        "ignore_spaces": {}
+    },
+    "possible_states": [
+        "first_move",
+        "alive",
+        "end_of_board",
+        "dead"
+    ],
+    "special_functions": true
+}
