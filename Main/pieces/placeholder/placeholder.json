@@ -1,0 +1,50 @@
+{
+    "name": {
+        "can_jump": false,
+        "move_on_attack": false,
+        "standard_moveset": {
+            "forward": 0,
+            "back": 0,
+            "right": 0,
+            "left": 0,
+            "diagonals": {
+                "top_right": 0,
+                "top_left": 0,
+                "bottom_right": 0,
+                "bottom_left": 0
+            },
+            "special_moves":{
+                "move1": [0, 0],
+                "move2": [0, 0]
+            },
+            "ignore_spaces": {
+                "space1": [0, 0],
+                "space2": [0, 0]
+            }
+        },
+        "attack_moveset": {
+            "forward": 0,
+            "back": 0,
+            "right": 0,
+            "left": 0,
+            "diagonals": {
+                "top_right": 0,
+                "top_left": 0,
+                "bottom_right": 0,
+                "bottom_left": 0
+            },
+            "special_moves":{
+                "move1": [0, 0],
+                "move2": [0, 0]
+            },
+            "ignore_spaces": {
+                "space1": [0, 0],
+                "space2": [0, 0]
+            }
+        },
+        "special_functions": false,
+        "possible_states": ["state1", "state2"],
+        "value": 0,
+        "id": 0
+    }
+}
