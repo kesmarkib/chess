@@ -13,9 +13,11 @@ export function findColor(num){
     };
 };
 
-export function executeMove(pos, distance, dx, dy, color, jump){
+export function executeMove(pos, distance, directionArray, color, jump){
     let validMoves = [];
     let runningPos = [pos[0], pos[1]];
+    let dx = directionArray[0];
+    let dy = directionArray[1];
 
     if(color == 1){
         dx = dx * -1;
@@ -54,56 +56,21 @@ export function executeMove(pos, distance, dx, dy, color, jump){
     return (validMoves);
 };
 
+const directionMatrixObj = {
+    "forward": [0, 1],
+    "backward": [0, -1],
+    "right": [1, 0],
+    "left": [-1, 0],
 
-//Forward, Backward, Right, Left
-export function F(pos, distance, color, jump){
-    return executeMove(pos, distance, 0, 1, color, jump);
+    "top_left": [-1, 1],
+    "bottom_left": [-1, -1],
+    "top_right": [1, 1],
+    "bottom_right": [1, -1]
+};
+export function moveMatrixFunc(pos, distance, directionString, color, jump){
+    return executeMove(pos, distance, directionMatrixObj[directionString], color, jump);
 };
 
-export function B(pos, distance, color, jump){
-    return executeMove(pos, distance, 0, -1, color, jump);
-};
-
-export function R(pos, distance, color, jump){
-    return executeMove(pos, distance, -1, 0, color, jump);
-};
-
-export function L(pos, distance, color, jump){
-    return executeMove(pos, distance, 1, 0, color, jump);
-};
-
-// diagonal
-export function RF(pos, distance, color, jump){
-    return executeMove(pos, distance, -1, 1, color, jump);
-};
-export function RB(pos, distance, color, jump){
-    return executeMove(pos, distance, -1, -1, color, jump);
-};
-export function LF(pos, distance, color, jump){
-    return executeMove(pos, distance, 1, 1, color, jump);
-};
-export function LB(pos, distance, color, jump){
-    return executeMove(pos, distance, 1, -1, color, jump);
-};
-
-export function D(pos, distance, color, jump){
-    let validMoves = [];
-
-    const directions = [RF, RB, LF, LB];
-
-    if(typeof distance == "number"){
-        for(let i = 0; i < 4; i++){
-            validMoves.push(directions[i](pos, distance, color, jump));
-        };
-    }else{
-        for(let i = 0; i < distance.length; i++){
-            let set = distance[i]
-            validMoves.push(set[0](set[1], set[2], color, jump));
-        };
-    };
-
-    return(validMoves.flat());
-};
 
 export function M(pos, newPositions, color){
     let validMoves = [];
