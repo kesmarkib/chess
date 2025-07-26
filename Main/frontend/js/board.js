@@ -1,4 +1,3 @@
-import * as util from "./utils.js";
 import * as constant from "./constants.js";
 import { visualize } from "./visualize.js";
 
