@@ -1,8 +1,6 @@
 import * as constant from "./constants.js";
 import { board } from "./board.js";
 
-const horizontal = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
 export function visualize(){
     const table = document.getElementById("table");
     table.innerText = "";
