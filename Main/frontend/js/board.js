@@ -25,7 +25,7 @@ class Board{
     };
 
     highlightPos(positions){
-        this.board_no_highlight = JSON.parse(util.JSON.stringify(this.board));
+        this.board_no_highlight = JSON.parse(JSON.stringify(this.board));
 
         for(let i = 0; i < positions.length; i++){
             this.board[positions[i][0]][positions[i][1]] = "■";
@@ -34,7 +34,7 @@ class Board{
     };
 
     get clear(){
-        this.board = JSON.parse(util.JSON.stringify(this.board_no_highlight));
+        this.board = JSON.parse(JSON.stringify(this.board_no_highlight));
         visualize();
     };
 };
