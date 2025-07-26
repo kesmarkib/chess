@@ -96,7 +96,7 @@ export function vision(color){
 };
 
 export function visionOnPos(color, pos){    
-    let index = (color == 0 ? whiteVision : blackVision).findIndex(arr => util.strfy(arr) === util.strfy(pos));
+    let index = (color == 0 ? whiteVision : blackVision).findIndex(arr => util.JSON.stringify(arr) === util.JSON.stringify(pos));
 
     return(index > -1 ? true : false);
 };

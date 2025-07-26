@@ -3,50 +3,37 @@ import * as util from "./utils.js";
 import { board } from "./board.js";
 import * as constant from "./constants.js";
 
-let pieces = [];
-
 export class Piece{
-    constructor(type, id, color, state){
+    constructor(json, id, color, state){
+        this.object = json
         this.id = id;
-        this.type = type;
         this.color = color;
         this.state = state;
         
+
         this.position = null;
     };
+
+    updatePos(pos){
+        this.position = pos;
+    }
 
     get pos(){
         for(let i = 0; i < constant.board_width; i++){
             let index = board.board[i].indexOf(this.id);
             if(index > -1){
+                this.position = [i, index]
                 return([i, index]);
             };
         };
         return(new Error("Position not found"));
     };
 
-    get possibleMoves(){
-        let moves = [];
-
-        for(let i = 0; i < this.standard.length; i++){
-            moves.push(this.standard[i][0](this.position, this.standard[i][1], this.color, this.jump));
-        };
-
-        moves = moves.flat();
+    get getLegalMoves(){
         
-        for(let i = 0; i < this.ignore[0].length; i++){
-            let p = this.ignore[0][i];
-            let ignorePos = move.M(this.position, [p], this.color)[0];
-            let index = moves.findIndex(arr => util.strfy(arr) === util.strfy(ignorePos));
-            if(index > -1){
-                moves.splice(index, 1);
-            };
-        };
-
-        return(moves);
     };
 
-    get possibleAttacks(){
+    get getLegalAttacks(){
         let attackMoves = [];
         if(this.attacks.length == 0){
             return (this.possibleMoves);
@@ -65,7 +52,7 @@ export class Piece{
         for(let i = 0; i < this.ignore[1].length; i++){
             let p = this.ignore[1][i];
             let ignorePos = move.M(this.position, [p], this.color)[0];
-            let index = attackMoves.findIndex(arr => strfy(arr) === strfy(ignorePos));
+            let index = attackMoves.findIndex(arr => JSON.stringify(arr) === JSON.stringify(ignorePos));
             if(index > -1){
                 attackMoves.splice(index, 1);
             };
