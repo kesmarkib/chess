@@ -4,7 +4,7 @@ import { board } from "./board.js";
 
 // standard movesets (forward = F; backward = B; right = R; left = L; combinations: FR, FL, BR, BL; + misc) - int(if infinite then input number equal to board length)
 
-const directionMatrixObj = {
+const direction_matrix_obj = {
     "forward": [0, 1],
     "backward": [0, -1],
     "right": [1, 0],
@@ -59,17 +59,7 @@ export function executeMove(pos, distance, direction_array, color, jump){
     return (validMoves);
 };
 
-const direction_matrix_obj = {
-    "forward": [0, 1],
-    "backward": [0, -1],
-    "right": [1, 0],
-    "left": [-1, 0],
 
-    "top_left": [-1, 1],
-    "bottom_left": [-1, -1],
-    "top_right": [1, 1],
-    "bottom_right": [1, -1]
-};
 export function moveMatrixFunc(pos, distance, direction_string, color, jump){
     return executeMove(pos, distance, direction_matrix_obj[direction_string], color, jump);
 };
