@@ -4,7 +4,7 @@
     "move_on_attack": true,
     "standard_moveset": {
         "forward": 2,
-        "back": 0,
+        "backward": 0,
         "right": 0,
         "left": 0,
         "diagonals": {
@@ -18,7 +18,7 @@
     },
     "attack_moveset": {
         "forward": 0,
-        "back": 0,
+        "backward": 0,
         "right": 0,
         "left": 0,
         "diagonals": {

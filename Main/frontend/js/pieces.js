@@ -22,7 +22,7 @@ export class Piece{
                 return([i, index]);
             };
         };
-        return("position not found");
+        return(new Error("Position not found"));
     };
 
     get possibleMoves(){
