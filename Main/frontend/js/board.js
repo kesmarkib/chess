@@ -5,7 +5,7 @@ class Board{
     constructor(width, height){
         this.width = width;
         this.height = height;
-        this.board = [];
+        this.board_values = [];
         this.board_no_highlight = [];
 
     };
@@ -13,62 +13,70 @@ class Board{
     // empty board
     generateEmpty(){
         for(let w = 0; w < this.width; w++){
-            this.board.push([]);
+            this.board_values.push([]);
             for(let h = 0; h < this.height; h++){
-                this.board[h].push(0);
+                this.board_values[h].push(0);
             };
         };
     }
 
     // color index 0===>white, 1====>black
-    // ID ===> white páros, black páratlan
+    // ID ===> white even, black odd
     initialize(pointers, color){
         is_valid_to_replace = false;
-        let pieceId = color;
-        for(let pointer of pointers[color]){
+        color_num = color == "white" ? 0 : color == "black" ? 1 : null;
+        let piece_id = color_num
+        for(let pointer of pointers[color_num]){
 
             let x = horizontal.indexOf(pointer[1]) - 1;
             let y = pointer[2] - 1;
 
-            replaceSquare(board, x, y, pointer, is_valid_to_replace);
+            replaceSquare(board, [x, y], pointer, is_valid_to_replace);
 
-            pieceId += 2;
+            piece_id += 2;
         }
     };
 
-    replaceSquare(board, x, y, pointer, is_valid_to_replace){
-        if(isOccupied(board, x, y) && !is_valid_to_replace){
+    // get a value of a given position [x, y]
+    getValue(position){
+        return(this.board_values[position[0]][position[1]]);
+    };
+
+    replaceSquare(position, pointer, is_valid_to_replace){
+        const x = position[0];
+        const y = position[1];
+
+        if(isOccupied([x, y]) && !is_valid_to_replace){
             //function
             throw new Error("You have already placed a piece on that square!");
         }
 
-        return board[x][y] = pointer[0];
+        this.board_values[x][y] = pointer[0];
+        return;
     }
 
-    isOccupied(board, x, y){
-        if(board[x][y] === 0){
+    isOccupied(position){
+        const x = position[0];
+        const y = position[1];
+
+        if(this.board_values[x][y] === 0){
             return false;
         }else{
             return true;
         }
     }
 
-    // get a value of a given position [x, y]
-    value(pos){
-        return(this.board[pos[0]][pos[1]]);
-    };
-
     highlightPos(pointers){
-        this.board_no_highlight = JSON.parse(JSON.stringify(this.board));
+        this.board_no_highlight = JSON.parse(JSON.stringify(this.board_values));
 
         for(let i = 0; i < pointers.length; i++){
-            this.board[pointers[i][0]][pointers[i][1]] = "■";
+            this.board_values[pointers[i][0]][pointers[i][1]] = "■";
         };
         visualize();
     };
 
     get clear(){
-        this.board = JSON.parse(JSON.stringify(this.board_no_highlight));
+        this.board_values = JSON.parse(JSON.stringify(this.board_no_highlight));
         visualize();
     };
 };
@@ -82,6 +90,6 @@ let testPointer2 = {
 // color index 0===>white, 1====>black
 
 let board = new Board(constant.board_width, constant.board_height);
-board.generateEmpty().initialize(testPointers, 0).initialize(testPointers, 1);
+board.generateEmpty().initialize(testPointers, "white").initialize(testPointers, "black");
 
 export { board };

@@ -2,23 +2,15 @@ import * as constant from "./constants.js";
 import { pieces } from "./pieces.js";
 import { board } from "./board.js";
 
-// standard movesets (forward = F; backward = B; right = R; left = L; combinations: FR, FL, BR, BL; + misc) - int(if infinite then input number equal to board length)
+// dependency: needs access to the board object
 
-const directionMatrixObj = {
-    "forward": [0, 1],
-    "backward": [0, -1],
-    "right": [1, 0],
-    "left": [-1, 0],
+function getColor(id){
+    return(id%2 == 0 ? "white" : "black")
+}
 
-    "top_left": [-1, 1],
-    "bottom_left": [-1, -1],
-    "top_right": [1, 1],
-    "bottom_right": [1, -1]
-};
-
-export function executeMove(pos, distance, direction_array, color, jump){
-    let validMoves = [];
-    let runningPos = [pos[0], pos[1]];
+function calculateMove(position, distance, direction_array, color, can_jump){
+    const moves = [];
+    const running_pos = [position[0], position[1]];
     let dx = direction_array[0];
     let dy = direction_array[1];
 
@@ -28,35 +20,36 @@ export function executeMove(pos, distance, direction_array, color, jump){
     };
 
     for(let i = 0; i < distance; i++){
-        runningPos[0] += dx;
-        runningPos[1] += dy;
+        running_pos[0] += dx;
+        running_pos[1] += dy;
         
         for(let j = 0; j < 2; j++){
-            if(runningPos[j] <= 0 || runningPos[j] >= (j == 0 ? constant.board_width - 1 : constant.board_height - 1)){
-                continue;
+            if(running_pos[j] <= 0 || running_pos[j] >= (j == 0 ? constant.board_width - 1 : constant.board_height - 1)){
+                return(moves)
             };  
         };
 
-        let boardValue = board.value(runningPos);
+        const board_value = board.getValue(running_pos);
+        const board_value_color = getColor(board_value)
 
-        if(boardValue == 0){
-            validMoves.push([...runningPos]);
+        if(board_value == 0){
+            moves.push([...running_pos]);
         }else{
-            if(jump){
-                if(findColor(boardValue) != color){
-                    validMoves.push([...runningPos]);
+            if(can_jump){
+                if(board_value_color != color){
+                    moves.push([...running_pos]);
                 }
             }else{
-                if(findColor(boardValue) == color){
-                    return(validMoves);
+                if(board_value_color == color){
+                    return(moves);
                 }else{
-                    validMoves.push([...runningPos]);
-                    return(validMoves);
+                    moves.push([...running_pos]);
+                    return(moves);
                 }
             };
         };
     };
-    return (validMoves);
+    return(moves);
 };
 
 const direction_matrix_obj = {
@@ -70,36 +63,16 @@ const direction_matrix_obj = {
     "top_right": [1, 1],
     "bottom_right": [1, -1]
 };
-export function moveMatrixFunc(pos, distance, direction_string, color, jump){
-    return executeMove(pos, distance, direction_matrix_obj[direction_string], color, jump);
+
+export function directionMatrixMove(position, distance, direction, color, can_jump){
+    return calculateMove(position, distance, direction_matrix_obj[direction], color, can_jump);
 };
 
-
-export function M(pos, newPositions, color){
-    let valid_moves = [];
-    for(let i = 0; i < newPositions.length; i++){
-        let new_pos = newPositions[i];
-        valid_moves.push(executeMove(pos, 1, new_pos[0], new_pos[1], color, false));
+export function calculateSpecialMove(position, special_moves, color){
+    let moves = [];
+    for(let i = 0; i < special_moves.length; i++){
+        moves.push(calculateMove(position, 1, special_moves, color, false));
     };
 
-    return(valid_moves.flat());
-};
-
-export function vision(color){
-    let all_positions = [];
-    pieces.forEach(p => {
-        if(p.color == color){
-            all_positions.push(p.possibleAttacks);
-        };
-    });
-
-    all_positions = all_positions.flat();
-
-    return(all_positions);
-};
-
-export function visionOnPos(color, pos){    
-    let index = (color == 0 ? whiteVision : blackVision).findIndex(arr => JSON.stringify(arr) === JSON.stringify(pos));
-
-    return(index > -1 ? true : false);
+    return(moves.flat());
 };

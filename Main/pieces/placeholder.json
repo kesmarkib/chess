@@ -32,14 +32,14 @@
             "bottom_right": 0,
             "bottom_left": 0,
 
-            "special_moves":{
-                "move1": [0, 0],
-                "move2": [0, 0]
-            },
-            "ignore_spaces": {
-                "space1": [0, 0],
-                "space2": [0, 0]
-            }
+            "special_moves":[
+                [0, 0],
+                [0, 0]
+            ],
+            "ignore_spaces":[
+                [0, 0],
+                [0, 0]
+            ]
         },
         "possible_states": ["alive", "dead", "state1"],
         "special_functions": false
