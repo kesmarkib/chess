@@ -1,4 +1,4 @@
-import * as util from "./utils.js";
+/*import * as util from "./utils.js";
 import * as move from "./move.js";
 import * as constant from "./constants.js";
 import { visualize } from "./visualize.js";
@@ -12,4 +12,4 @@ globalThis.move = move;
 globalThis.constant = constant;
 globalThis.piece = piece;
 globalThis.pieces = pieces;
-globalThis.board = board;
+globalThis.board = board; */

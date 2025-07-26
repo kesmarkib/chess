@@ -5,7 +5,7 @@ import * as constant from "./constants.js";
 
 let pieces = [];
 
-export class piece{
+export class Piece{
     constructor(type, id, color, state){
         this.id = id;
         this.type = type;

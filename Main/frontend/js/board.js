@@ -2,7 +2,7 @@ import * as util from "./utils.js";
 import * as constant from "./constants.js";
 import { visualize } from "./visualize.js";
 
-class chessboard{
+class Board{
     constructor(width, height){
         this.width = width;
         this.height = height;
@@ -39,6 +39,6 @@ class chessboard{
     };
 };
 
-let board = new chessboard(constant.board_width, constant.board_height);
+let board = new Board(constant.board_width, constant.board_height);
 
 export { board };

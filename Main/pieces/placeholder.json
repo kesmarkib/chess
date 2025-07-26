@@ -1,6 +1,5 @@
 {
     "name": {
-        "id": 0,
         "value": 0,
         "can_jump": false,
         "move_on_attack": false,
@@ -48,3 +47,4 @@
         "special_functions": false
     }
 }
+
