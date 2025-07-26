@@ -8,12 +8,11 @@
             "back": 0,
             "right": 0,
             "left": 0,
-            "diagonals": {
-                "top_right": 0,
-                "top_left": 0,
-                "bottom_right": 0,
-                "bottom_left": 0
-            },
+            "top_right": 0,
+            "top_left": 0,
+            "bottom_right": 0,
+            "bottom_left": 0,
+
             "special_moves":{
                 "move1": [0, 0],
                 "move2": [0, 0]
@@ -28,12 +27,11 @@
             "back": 0,
             "right": 0,
             "left": 0,
-            "diagonals": {
-                "top_right": 0,
-                "top_left": 0,
-                "bottom_right": 0,
-                "bottom_left": 0
-            },
+            "top_right": 0,
+            "top_left": 0,
+            "bottom_right": 0,
+            "bottom_left": 0,
+
             "special_moves":{
                 "move1": [0, 0],
                 "move2": [0, 0]
