@@ -13,11 +13,11 @@ export function findColor(num){
     };
 };
 
-export function executeMove(pos, distance, directionArray, color, jump){
+export function executeMove(pos, distance, direction_array, color, jump){
     let validMoves = [];
     let runningPos = [pos[0], pos[1]];
-    let dx = directionArray[0];
-    let dy = directionArray[1];
+    let dx = direction_array[0];
+    let dy = direction_array[1];
 
     if(color == 1){
         dx = dx * -1;
@@ -56,7 +56,7 @@ export function executeMove(pos, distance, directionArray, color, jump){
     return (validMoves);
 };
 
-const directionMatrixObj = {
+const direction_matrix_obj = {
     "forward": [0, 1],
     "backward": [0, -1],
     "right": [1, 0],
@@ -67,8 +67,8 @@ const directionMatrixObj = {
     "top_right": [1, 1],
     "bottom_right": [1, -1]
 };
-export function moveMatrixFunc(pos, distance, directionString, color, jump){
-    return executeMove(pos, distance, directionMatrixObj[directionString], color, jump);
+export function moveMatrixFunc(pos, distance, direction_string, color, jump){
+    return executeMove(pos, distance, direction_matrix_obj[direction_string], color, jump);
 };
 
 
