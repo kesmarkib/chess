@@ -30,7 +30,7 @@
     },
     "possible_states": [
         "first_move",
-        "alive",
+        "neutral",
         "end_of_board",
         "dead"
     ],

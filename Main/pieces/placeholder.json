@@ -41,7 +41,7 @@
                 [0, 0]
             ]
         },
-        "possible_states": ["alive", "dead", "state1"],
+        "possible_states": ["neutral", "dead", "state1"],
         "special_functions": false
     }
 }

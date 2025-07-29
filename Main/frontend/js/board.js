@@ -89,6 +89,7 @@ let testPointer2 = {
 };
 // color index 0===>white, 1====>black
 
+//dependency on constants
 let board = new Board(constant.board_width, constant.board_height);
 board.generateEmpty().initialize(testPointers, "white").initialize(testPointers, "black");
 
