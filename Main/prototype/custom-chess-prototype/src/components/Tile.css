@@ -1,0 +1,15 @@
+.tile-white {
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+}
+
+.tile-black {
+  width: 100px;
+  height: 100px;
+  background-color: #000;
+}
+
+.tile.selected {
+  background-color: red;
+}
